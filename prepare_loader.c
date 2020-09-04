@@ -4,6 +4,7 @@
 #include <string.h>
 #include "balong-malalim.h"
 #include "patcher.h"
+#include "parts.h"
 
 int locate_kernel(char *buf, uint32_t size);
 
@@ -11,7 +12,9 @@ int prepare_loader(FILE *loader)
 {
 	int i, res;
 	int  koffset;
-	int fbflag = 1, bflag = 1, cflag = 1;
+	int fbflag = 1, bflag = 1, cflag = 1, mflag = 1;
+	uint32_t ptoff;
+	struct ptable_t *ptable;
 
 	fseek(loader, 36, SEEK_SET);
 	fread(&blk[0], 16, 1, loader);
@@ -60,8 +63,20 @@ int prepare_loader(FILE *loader)
 	printf("buf   = [%p] \n", (void *)blk[i].buf);
 	printf("\n");
 	*/	
+
+	ptoff = find_ptable_ram(blk[1].buf, blk[1].size);
+	ptable = (struct ptable_t *)(blk[1].buf + ptoff);
+
+	if(mflag){
+		if(ptoff == 0){	/* partition table is not found */
+			printf("Partition table not found.\n");
+			exit(EXIT_FAILURE);
+		}
+		show_partition_table(*ptable);
+		exit(EXIT_SUCCESS);
+	}
+
 	/* Patch erase procedure for ignoring bad blocks */	
-	
 	if(bflag){
 		res = perasebad(blk[1].buf, blk[1].size);
 		if(res == 0){

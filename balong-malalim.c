@@ -10,6 +10,9 @@ int main(int argc, char *argv[])
 	char *loader_file;
 	char *devname = "/dev/ttyUSB0";
 
+	printf("\n     Balong Chipset USB Emergency USB Bootloader.\n");
+	printf("** Full credits to forth32 for the original source **\n");
+
 	if(argc < 2){
 		printf("Usage: %s [loader file]\n", argv[0]);
 		return -1;

@@ -1,6 +1,10 @@
-balong-malalim: patcher.o prepare_loader.o send_loader.o open_port.o balong-malalim.c
+balong-malalim: parts.o patcher.o prepare_loader.o send_loader.o open_port.o balong-malalim.c
 
-	c89 patcher.o prepare_loader.o send_loader.o open_port.o balong-malalim.c -o balong-malalim
+	c89 parts.o patcher.o prepare_loader.o send_loader.o open_port.o balong-malalim.c -o balong-malalim
+
+parts.o: parts.c
+
+	c89 -c parts.c
 
 patcher.o: patcher.c
 
