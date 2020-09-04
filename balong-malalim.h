@@ -1,4 +1,5 @@
 #include <termios.h>
+#include <stdio.h>
 
 int prepare_loader(FILE *loader);
 int send_loader(int devfd);

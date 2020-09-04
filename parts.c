@@ -22,12 +22,17 @@ void show_partition_table(struct ptable_t ptable)
 	printf("   %5s  ", "count");
 
 	printf("\n");
+	
 	for(i = 0; i < 94; i++)
 		putchar('-');
 	printf("\n");
-
-	for(i = 0; ptable.part[i].name != 0 && (strcmp(ptable.part[i].name, "T")
-				!= 0); i++){
+	/*
+	for(i = 0; ptable.part[i].name[0] != 0; i++){
+		printf("%s\n", ptable.part[i].name);
+	}
+	*/
+	
+	for(i = 0; (ptable.part[i].name[0] != 0) && (strcmp(ptable.part[i].name, "T") != 0); i++){
 		
 		printf(" %02i ", pnum);
 		printf(" %-16.16s ", ptable.part[i].name);
@@ -42,6 +47,7 @@ void show_partition_table(struct ptable_t ptable)
 		pnum++;
 		printf("\n");
 	}
+	
 	printf("\n");
 }
 
