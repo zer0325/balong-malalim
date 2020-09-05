@@ -4,22 +4,23 @@
 
 int open_port(char *devname)
 {
-	int res = 0;
+	int res, c;
 
 	devfd = open(devname, O_RDWR | O_NOCTTY | O_SYNC);
 	/*
 	printf("debug: devfd = %d\n", devfd);
 	*/
 	if(devfd == -1){
-		fprintf(stderr, "\nError: Device \"%s\" not found\n", devname);
+		fprintf(stderr, "\nError: Device \"%s\" not found.\n\n", devname);
 		return devfd;
 	}
 
 	/* Test if the device is in USB boot mode */
+	c = 0;
 	write(devfd, "A", 1);
-	read(devfd, &res, 1);
-	if(res != 0x55){
-		printf("\nPort is not in USB boot mode. Perform testpoint if necessary. Perform testpoint if necessary.\n");
+	res = read(devfd, &c, 1);
+	if(c != 0x55){
+		printf("\nPort is not in USB boot mode. Perform testpoint if necessary.\n\n");
 		return -1;
 	}
 	

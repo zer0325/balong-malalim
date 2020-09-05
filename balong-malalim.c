@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 				flags += 32;
 				break;
 			default:
-				printf("Error. Option '-%c' is invalid.\n");
+				printf("\n%s: Error. Invalid option. - \"-%c\".\n\n", progname, c);
 				return -1;
 		}
 	}
@@ -78,6 +78,10 @@ int main(int argc, char *argv[])
 	
 	if(!prepare_loader(ldr, flags))
 		return -1;
+
+	/* Set the /dev/ttyUSB0 as the default device */
+	if(!((flags & 0x02) >> 1))
+		strcpy(devname, "/dev/ttyUSB0");
 
 	res = open_port(devname);
 	if(res == -1) 
