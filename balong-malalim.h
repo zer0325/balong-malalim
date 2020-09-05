@@ -1,4 +1,5 @@
 #include <termios.h>
+#include <stdint.h>
 #include <stdio.h>
 
 int prepare_loader(FILE *loader, uint8_t flags);

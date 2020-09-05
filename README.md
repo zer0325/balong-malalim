@@ -5,5 +5,5 @@ Work in progress....
 
 ## Screenshots
 
-![Preview](screenshot_mflag.png)
+![Screenshot for -m option](screenshot_mflag.png)
 

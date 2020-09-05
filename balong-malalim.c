@@ -75,27 +75,23 @@ int main(int argc, char *argv[])
 		printf("\nError. File \"%s\" is not a valid loader file\n\n", *argv);
 		return -1;
 	}
-
-	res = prepare_loader(ldr, flags);
-	if(!res){
-		printf("\nError reported in prepare_loader() function.\n\n");
+	
+	if(!prepare_loader(ldr, flags))
 		return -1;
-	}
 
 	res = open_port(devname);
-	if(res == -1){
-		printf("\nError reported in open_port() function.\n\n");
+	if(res == -1) 
 		return -1;
-	}
 
 	
-	res = send_loader(devfd);
-	if(!res){
-		printf("\nError reported in send_loader() function.\n\n");
+	if(!send_loader(devfd))
 		return -1;
-	}
-
+	
 	fclose(ldr);
+	
+	/* if -f or -b option is set */
+	if(((flags & 0x08) >> 3) || ((flags & 0x016) >> 4))
+		printf("\nDevice is now in Fastboot mode.\n");
 
 	printf("\nDownload Complete!!\n\n");
 	return 0;

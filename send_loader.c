@@ -26,8 +26,10 @@ int send_loader(int devfd)
 		header[3] = blk[i].lmode;
 		*((unsigned int *)&header[4]) = htonl(blk[i].size);
 		*((unsigned int *)&header[4]) = htonl(blk[i].addr);
-		if(!send_packet(header, 14, devfd))
+		if(!send_packet(header, 14, devfd)){
+			printf("\nModem rejected data packet.\n");
 			return 0;
+		}
 		
 
 		for(offset = 0; offset + datasize < blk[i].size; offset += 1024){
@@ -38,8 +40,10 @@ int send_loader(int devfd)
 			data[1] = packet_count;
 			data[2] = ~packet_count & 0xff;
 			memcpy((void *)(data + 3), (void *)(blk[i].buf + offset), datasize);
-			if(!send_packet(data, datasize + 5, devfd))
+			if(!send_packet(data, datasize + 5, devfd)){
+				printf("\nModem rejected data packet.\n");
 				return 0;
+			}
 			
 			packet_count++;
 		}
@@ -53,15 +57,19 @@ int send_loader(int devfd)
 	data[1] = packet_count;
 	data[2] = ~packet_count & 0xff;
 	memcpy((void *)(data + 3), (void *)(blk[i].buf + offset), blk[i].size - offset);
-	if(!send_packet(data, blk[i].size - offset + 5, devfd))
+	if(!send_packet(data, blk[i].size - offset + 5, devfd)){
+		printf("\nModem rejected data packet.\n");
 		return 0;
+	}
 	packet_count++;
 
 	/* Do the tail */
 	tail[1] = packet_count;
 	tail[2] = ~packet_count & 0xff;
-	if(!send_packet(tail, 5, devfd))
+	if(!send_packet(tail, 5, devfd)){
+		printf("\nModem rejected data packet.\n");
 		return 0;
+	}
 	
 	return 1;
 }

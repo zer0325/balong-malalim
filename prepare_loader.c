@@ -42,7 +42,7 @@ int prepare_loader(FILE *loader, uint8_t flags)
 	if(fbflag){
 		koffset = locate_kernel(blk[1].buf, blk[1].size);
 		if(koffset == 0){
-			printf("The bootloader does not have a fastboot component.");
+			printf("\nThe bootloader does not have a fastboot component.");
 			printf(" Fastboot loading is not possible.\n");
 			return 0;
 		} else{
@@ -70,7 +70,7 @@ int prepare_loader(FILE *loader, uint8_t flags)
 	/* test if -m option is enabled */
 	if((flags & 0x04) >> 2){
 		if(ptoff == 0){	/* partition table is not found */
-			printf("Partition table not found.\n");
+			printf("\nPartition table not found.\n");
 			exit(EXIT_FAILURE);
 		}
 		show_partition_table(*ptable);
@@ -82,7 +82,7 @@ int prepare_loader(FILE *loader, uint8_t flags)
 	if((flags & 0x16) >> 4){
 		res = perasebad(blk[1].buf, blk[1].size);
 		if(res == 0){
-			printf("perasebad() function error.");
+			printf("\nperasebad() function error.");
 			printf(" loading not possible.\n");
 			return 0;
 		}
@@ -102,9 +102,9 @@ int prepare_loader(FILE *loader, uint8_t flags)
 		if(res == 0)
 			res = pv7r22_3(blk[1].buf, blk[1].size);
 		if(res != 0)
-			printf("Patch applied on offset 0x%08x\n", blk[1].offset + res);
+			printf("\nPatch applied on offset 0x%08x\n", blk[1].offset + res);
 		else{
-			printf("Patch signature not found. Use -c to boot without patching.\n");
+			printf("\nPatch signature not found. Use -c to boot without patching.\n");
 			return 0;
 		}
 	}
