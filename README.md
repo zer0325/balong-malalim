@@ -27,8 +27,14 @@ Some USB loaders are available in
 [this](https://github.com/forth32/balong-usbdload) repository, along with patched versions (usblsafe.bin).
 
 
-
 ## Screenshots
+
+Output of `$ balong-malalim -h`
+
+![Screenshot for help](screenshot_help.png)
+
+
+Output of `$ balong-malalim -m usbloader-b310.bin`
 
 ![Screenshot for -m option](screenshot_mflag.png)
 
