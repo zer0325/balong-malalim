@@ -1,3 +1,9 @@
 # balong-malalim
 
-Work in progres..
+Work in progress....
+
+
+## Screenshots
+
+![Screnshot for -m option](screenshot_mflag.png)
+
