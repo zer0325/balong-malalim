@@ -1,7 +1,7 @@
 #include <termios.h>
 #include <stdio.h>
 
-int prepare_loader(FILE *loader);
+int prepare_loader(FILE *loader, uint8_t flags);
 int send_loader(int devfd);
 int open_port(char *devname);
 

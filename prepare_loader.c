@@ -8,7 +8,7 @@
 
 int locate_kernel(char *buf, uint32_t size);
 
-int prepare_loader(FILE *loader)
+int prepare_loader(FILE *loader, uint8_t flags)
 {
 	int i, res;
 	int  koffset;
@@ -67,7 +67,8 @@ int prepare_loader(FILE *loader)
 	ptoff = find_ptable_ram(blk[1].buf, blk[1].size);
 	ptable = (struct ptable_t *)(blk[1].buf + ptoff);
 
-	if(mflag){
+	/* test if -m option is enabled */
+	if((flags & 0x04) >> 2){
 		if(ptoff == 0){	/* partition table is not found */
 			printf("Partition table not found.\n");
 			exit(EXIT_FAILURE);
@@ -76,8 +77,9 @@ int prepare_loader(FILE *loader)
 		exit(EXIT_SUCCESS);
 	}
 
-	/* Patch erase procedure for ignoring bad blocks */	
-	if(bflag){
+	/* test if -b option is enabled then perform */
+	/* patch erase procedure for ignoring bad blocks */	
+	if((flags & 0x16) >> 4){
 		res = perasebad(blk[1].buf, blk[1].size);
 		if(res == 0){
 			printf("perasebad() function error.");
@@ -85,9 +87,9 @@ int prepare_loader(FILE *loader)
 			return 0;
 		}
 	}
-	/* Perform patching procedure based on chipset */
-	
-	if(!cflag){
+	/* test if -c option is enabled, if not */
+	/* perform patching procedure based on chipset */
+	if(!((flags & 0x32) >> 5)){
 		res = pv7r1(blk[1].buf, blk[1].size);
 		if(res == 0)
 			res = pv7r2(blk[1].buf, blk[1].size);
