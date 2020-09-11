@@ -51,5 +51,3 @@ int open_port(char *devname)
 	
 	return devfd;
 }
-
-
