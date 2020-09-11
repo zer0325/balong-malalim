@@ -25,9 +25,9 @@ int send_loader(int devfd)
 
 		header[3] = blk[i].lmode;
 		*((unsigned int *)&header[4]) = htonl(blk[i].size);
-		*((unsigned int *)&header[4]) = htonl(blk[i].addr);
+		*((unsigned int *)&header[8]) = htonl(blk[i].addr);
 		if(!send_packet(header, 14, devfd)){
-			printf("\nModem rejected data packet.\n");
+			printf("\nModem rejected header packet.\n");
 			return 0;
 		}
 		
@@ -58,7 +58,7 @@ int send_loader(int devfd)
 	data[2] = ~packet_count & 0xff;
 	memcpy((void *)(data + 3), (void *)(blk[i].buf + offset), blk[i].size - offset);
 	if(!send_packet(data, blk[i].size - offset + 5, devfd)){
-		printf("\nModem rejected data packet.\n");
+		printf("\nModem rejected end of data packet.\n");
 		return 0;
 	}
 	packet_count++;
@@ -70,7 +70,7 @@ int send_loader(int devfd)
 		printf("\nModem rejected data packet.\n");
 		return 0;
 	}
-	
+	close(devfd);	
 	return 1;
 }
 
@@ -78,17 +78,18 @@ void checksum(unsigned char *buf, int len);
 
 int send_packet(unsigned char *buf, int len, int devfd)
 {
-	unsigned char reply_buf[1024];
+	unsigned char reply_buf[1024] = {0};
 	unsigned int res = 0;
+	int i;
 
 	checksum(buf, len);
 	
 	write(devfd, buf, len);
 	tcdrain(devfd);
 	res = read(devfd, reply_buf, 1024);
-	/*
+	/*	
 	printf("debug: res = %d, reply_buf[0] = 0x%02x\n", res, reply_buf[0]);
-	*/
+	*/	
 	if(res == 0 || reply_buf[0] != 0xAA)
 		return 0;
 

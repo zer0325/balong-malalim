@@ -62,22 +62,28 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	printf("\nChecking loader file.....");
 	/* Check if the loader file exists */
 	ldr = fopen(*argv, "rb");
 	if(!ldr){
 		printf("\nError. File \"%s\" does not exist.\n\n", *argv);
 		return -1;
 	}
-
+	printf("Success.\n");
+	printf("Checking if a valid loader file......");
 	/* Check if a valid loader file */
 	fread(&res, 4, 1, ldr);
 	if(res != 0x20000){
 		printf("\nError. File \"%s\" is not a valid loader file\n\n", *argv);
 		return -1;
 	}
-	
+	printf("Success.\n");
+	printf("Preparing loader.......");	
 	if(!prepare_loader(ldr, flags))
 		return -1;
+	printf("Success.\n");
+
+	fclose(ldr);
 
 	/* Set the /dev/ttyUSB0 as the default device */
 	if(!((flags & 0x02) >> 1))
@@ -87,11 +93,8 @@ int main(int argc, char *argv[])
 	if(res == -1) 
 		return -1;
 
-	
 	if(!send_loader(devfd))
 		return -1;
-	
-	fclose(ldr);
 	
 	/* if -f or -b option is set */
 	if(((flags & 0x08) >> 3) || ((flags & 0x016) >> 4))
