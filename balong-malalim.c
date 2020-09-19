@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	int res, i, c;
 	char devname[16], progname[16];
 
-	printf("    Baong Chipset Emergency USB Bootloader.\n");
+	printf("\n\n    Balong Chipset Emergency USB Bootloader.\n");
 	printf("** Full credits to forth32 for the original source. **\n");
 
 	strcpy(progname, argv[0]);
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	/* check if a valid usbloader file */
 	fread(&i, 1, 4, ldr);
 	if(i != 0x20000){
-		printf("File \"%s\" is not a valid usbloader file.\n", *argv);
+		printf("\nFile \"%s\" is not a valid usbloader file.\n\n", *argv);
 		return 1;
 	}
 
@@ -170,7 +170,7 @@ int prepare_loader(FILE *ldr)
 		fseek(ldr, blk[i].offset, SEEK_SET);
 		res = fread(blk[i].pbuf, 1, blk[i].size, ldr);
 		if(res != blk[i].size){
-			printf("\nUnexpected end of file: read %d, expected %d\n", res, blk[i].size);
+			printf("\nUnexpected end of file: read %d, expected %d\n\n", res, blk[i].size);
 			return 0;
 		}
 	}
@@ -182,8 +182,8 @@ int prepare_loader(FILE *ldr)
 			blk[1].pbuf[koff] = 0x55; 	/* signature patch */
 			blk[1].size = koff + 8;		/* trim the partition */		
 		} else{
-			printf("The bootloader does not have an ANDROID component. ");
-			printf("Fastboot loading is not possible\n");
+			printf("\nThe bootloader does not have an ANDROID component. ");
+			printf("Fastboot loading is not possible.\n\n");
 			exit(0);
 		}
 	}
@@ -193,7 +193,7 @@ int prepare_loader(FILE *ldr)
 	/* Test if -m option is enabled (show partition table map) */
 	if((flags & 0x04) >> 2){
 		if(ptoff == 0){	/* partition table is not found */
-			printf("\nPartition table not found.\n");
+			printf("\nPartition table not found.\n\n");
 			exit(EXIT_FAILURE);
 		}
 		show_partition_table(*ptable);
@@ -206,7 +206,7 @@ int prepare_loader(FILE *ldr)
 		res = perasebad(blk[1].pbuf, blk[1].size);
 		if(res == 0){
 			printf("\nperasebad() function error.");
-			printf(" loading not possible.\n");
+			printf(" loading not possible.\n\n");
 			return 0;
 		}
 	}
@@ -225,9 +225,9 @@ int prepare_loader(FILE *ldr)
 		if(res == 0)
 			res = pv7r22_3(blk[1].pbuf, blk[1].size);
 		if(res != 0)
-			printf("\nPatch applied on offset 0x%08x\n", blk[1].offset + res);
+			printf("\nPatch to be applied on offset 0x%08x....\n", blk[1].offset + res);
 		else{
-			printf("\nPatch signature not found. Use -c to boot without patching.\n");
+			printf("\nPatch signature not found. Use -c to boot without patching.\n\n");
 			return 0;
 		}
 	}
@@ -252,7 +252,7 @@ int open_port(char *devname)
 {
 	devfd = open(devname, O_RDWR | O_NOCTTY | O_SYNC);
 	if(devfd == -1){
-		printf("\nCannot open port \"%s\".\n", devname);
+		printf("\nCannot open port \"%s\".\n\n", devname);
 		return 0;
 	}
 	/* prepare the port configuration */
@@ -298,7 +298,7 @@ int send_loader()
 		/* send the start frame packet */
 		res = sendcmd(cmdhead, 14);
 		if(!res){
-			printf("\nModem rejected header packet.\n");
+			printf("\nModem rejected header packet.\n\n");
 			return 0;
 		}
 		for(adr = 0; adr < blk[i].size; adr += 1024){
@@ -316,7 +316,7 @@ int send_loader()
 			memcpy(cmddata + 3, blk[i].pbuf + adr, datasize);
 			pktcount++;
 			if(!sendcmd(cmddata, datasize + 5)){
-				printf("\nModem reject data packet\n");
+				printf("\nModem reject data packet\n\n");
 				return 0;
 			}
 		}
@@ -326,7 +326,7 @@ int send_loader()
 		cmdeod[1] = pktcount;
 		cmdeod[2] = ~(pktcount) & 0xff;
 		if(!sendcmd(cmdeod, 5)){
-				printf("\nModem rejected end of data packet.\n");
+				printf("\nModem rejected end of data packet.\n\n");
 				return 0;
 		}
 		printf("\n");
