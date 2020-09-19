@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	int res, i, c;
 	char devname[16], progname[16];
 
-	printf("\n\n    Balong Chipset Emergency USB Bootloader.\n");
+	printf("    Balong Chipset Emergency USB Bootloader.\n");
 	printf("** Full credits to forth32 for the original source. **\n");
 
 	strcpy(progname, argv[0]);
