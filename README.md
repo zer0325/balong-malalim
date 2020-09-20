@@ -38,3 +38,13 @@ Output of `$ balong-malalim -m usbloader-b310.bin`
 
 ![Screenshot for -m option](screenshot_mflag.png)
 
+
+Screenshot while performing testpoint.
+
+![Testpoint screenshot](testpoint.png)
+
+
+Output of `# balong-malalim -c -f usbloader-b315s.bin`
+
+![balong-malalim result](output.png)
+
